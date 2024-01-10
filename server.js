@@ -3,10 +3,8 @@ const express = require("express");
 const color = require("colors");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
 const morgan = require("morgan");
-
+const path = require("path");
 // coded
 const ErrorRoute = require("./middleware/ErrorRoute");
 const ErrorHandler = require ("./utils/ErrorForm");
@@ -26,7 +24,7 @@ const app = express();
 
 
 //config 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: path.join(__dirname, "config.env")});
 
 ConnectDB()
 app.use(cors());

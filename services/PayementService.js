@@ -1,14 +1,11 @@
-const stripe = require("stripe")(
-  "sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3"
-);
+
 const asynchandler = require("express-async-handler");
 const CartModule = require("../module/CartModule");
 const ErroFrom = require("../utils/ErrorForm");
 const AddresseModule = require("../module/AddressModule");
-
+const stripe = require("stripe")(process.env.STRIPE)
 
 exports.CreateLineItems = asynchandler( async ( req , res , next ) => {
-  
   const card = await CartModule.findOne({_id : req.body.card  , userId:req.user._id.toString()});
   if(!card) return next( new ErroFrom("cart not found" , 404));
   const line_items = (await card.populate("Books.book")).Books.map((ele)=>{
