@@ -36,7 +36,7 @@ app.options("*" ,cors());
 app.use(morgan("dev"))
 
 
-app.post("/api/v1/webhook" , ParseRequiset , webHookService);
+app.post("/api/v1/webhook" ,express.raw({type : 'application/json'}), webHookService);
 
 app.use(express.json())
 
