@@ -32,7 +32,7 @@ app.use(cors());
 app.use(morgan("dev"))
 
 
-app.post("/webhook" , express.raw({type : "application/json"}) ,webHookService);
+app.post("/api/v1/webhook" , express.raw({type : "application/json"}) ,webHookService);
 
 
 app.use(express.json());
