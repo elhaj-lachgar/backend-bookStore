@@ -15,6 +15,7 @@ const CardRoute = require('./api/CardRoute');
 const ConnectDB = require('./config/ConnetedDB');
 const AddressRoute = require('./api/AddressRoute');
 const PaymentRoute = require('./api/PayementRoute');
+const { webHookService } = require("./services/PayementService");
 
 
 
@@ -29,6 +30,11 @@ dotenv.config({ path: path.join(__dirname, "config.env")});
 ConnectDB()
 app.use(cors());
 app.use(morgan("dev"))
+
+
+app.post("/webhook" , express.raw({type : "application/json"}) ,webHookService);
+
+
 app.use(express.json());
 
 

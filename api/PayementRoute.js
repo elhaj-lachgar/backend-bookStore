@@ -20,7 +20,5 @@ router.post(
 );
 
 
-router
-  .post("/checkout-webhoks" ,express.raw({type : "application/json"}),webHookService);
 
 module.exports = router;
