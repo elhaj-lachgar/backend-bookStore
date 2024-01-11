@@ -6,6 +6,9 @@ const stripe = require("stripe")(
   "sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3"
 );
 
+const OrderModule = require ('../module/OrderModule');
+
+
 exports.CreateLineItems = asynchandler(async (req, res, next) => {
   const card = await CartModule.findOne({
     _id: req.body.card,
@@ -33,6 +36,7 @@ exports.CreateLineItems = asynchandler(async (req, res, next) => {
 });
 
 exports.CheckoutService = asynchandler(async (req, res, next) => {
+  console.log(req.body);
   const location = await AddresseModule.findOne({
     _id: req.body.address,
   });
@@ -47,11 +51,9 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
       payment_method_types: ["card"],
       cancel_url: "http://localhost:3000/",
       customer_email: req.user.email,
-      client_reference_id: req.body.cardId,
+      client_reference_id: req.body.cardId.toString(),
       metadata: {
-        city: location.city,
-        country: location.country,
-        streat: location.streat,
+         address : location._id,
       },
       line_items: req.body.line_items,
     });
@@ -74,6 +76,9 @@ exports.webHookService = asynchandler(async (req, res, next) => {
   }
 
   if(event.type === "checkout.session.completed"){
-    console.log("create order")
+    const  order  = await OrderModule.create({
+
+    })
   }
+  return;
 });
