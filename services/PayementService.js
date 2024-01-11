@@ -55,7 +55,7 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
       customer_email: req.user.email,
       client_reference_id: req.body.cardId.toString(),
       metadata: {
-         address : location._id.toString(),*
+         address : location._id.toString()
       },
       line_items: req.body.line_items,
     });
