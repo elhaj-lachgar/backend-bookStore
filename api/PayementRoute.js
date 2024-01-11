@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   CheckoutService,
   CreateLineItems,
+  webHookService
 } = require("../services/PayementService");
 
 const { AuthService, Allowed } = require("../services/AuthService");
@@ -17,5 +18,9 @@ router.post(
   CreateLineItems,
   CheckoutService
 );
+
+
+router
+  .post("/checkout-webhoks" ,express.raw({type : "application/json"}),webHookService);
 
 module.exports = router;
