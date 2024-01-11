@@ -11,13 +11,6 @@ const OrderSchema  = new mongoose.Schema({
         ref : "card",
         required : [ true , "card is required"]
     },
-    TotalPrice  :  {
-        value : Number,
-        currency : {
-            type : String ,
-            enum : ["USD", "EUR", "MAD"]
-        },
-    },
     isDelaivered : {
         type : Boolean,
         default : false,
