@@ -41,9 +41,6 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-OrderSchema.post(["save", "init"], function (doc) {
-  doc.populate("address user card");
-});
 
 const OrderModule = mongoose.model("order", OrderSchema);
 
