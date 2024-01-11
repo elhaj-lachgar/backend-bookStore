@@ -1,42 +1,43 @@
-
 const asynchandler = require("express-async-handler");
 const CartModule = require("../module/CartModule");
 const ErroFrom = require("../utils/ErrorForm");
 const AddresseModule = require("../module/AddressModule");
-const stripe = require("stripe")("sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3")
+const stripe = require("stripe")(
+  "sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3"
+);
 
-exports.CreateLineItems = asynchandler( async ( req , res , next ) => {
-  const card = await CartModule.findOne({_id : req.body.card  , userId:req.user._id.toString()});
-  if(!card) return next( new ErroFrom("cart not found" , 404));
-  const line_items = (await card.populate("Books.book")).Books.map((ele)=>{
+exports.CreateLineItems = asynchandler(async (req, res, next) => {
+  const card = await CartModule.findOne({
+    _id: req.body.card,
+    userId: req.user._id.toString(),
+  });
+  if (!card) return next(new ErroFrom("cart not found", 404));
+  const line_items = (await card.populate("Books.book")).Books.map((ele) => {
     return {
-      price_data : {
-        currency : ele.price.currency ,
-        product_data : {
-          name : ele.book.title,
-          images :[ ele.book.image],
-          metadata : { product_id: ele.book._id}
+      price_data: {
+        currency: ele.price.currency,
+        product_data: {
+          name: ele.book.title,
+          images: [ele.book.image],
+          metadata: { product_id: ele.book._id },
         },
-        unit_amount : parseInt(ele.price.value * 100 )
+        unit_amount: parseInt(ele.price.value * 100),
       },
-      quantity : ele.quantity,
-    }
+      quantity: ele.quantity,
+    };
   });
 
   req.body.line_items = line_items;
-  req.body.cardId  = card._id;
+  req.body.cardId = card._id;
   return next();
-
-})
+});
 
 exports.CheckoutService = asynchandler(async (req, res, next) => {
   const location = await AddresseModule.findOne({
     _id: req.body.address,
   });
 
-
   if (!location) return next(new ErroFrom("address not found", 404));
-
 
   let session;
   try {
@@ -55,12 +56,34 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
       line_items: req.body.line_items,
     });
   } catch (err) {
-    return next(new ErroFrom(err.message||err, 400));
+    return next(new ErroFrom(err.message || err, 400));
   }
   return res.status(200).json({ url: session.url });
 });
 
+exports.webHookService = asynchandler(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
 
-exports.webHookService = asynchandler ( async ( req , res , next ) => {
-  console.log(req.body);
-})
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      const checkoutSessionCompleted = event.data.object;
+      // Then define and call a function to handle the event checkout.session.completed
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  console.log(event)
+});
