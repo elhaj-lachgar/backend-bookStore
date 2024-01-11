@@ -64,7 +64,8 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
 });
 
 exports.webHookService = asynchandler(async (req, res, next) => {
-  console.log(req.body);
+
+  
   const sig = req.headers["stripe-signature"];
   let event;
 
@@ -76,9 +77,8 @@ exports.webHookService = asynchandler(async (req, res, next) => {
   }
 
   if(event.type === "checkout.session.completed"){
-    const  order  = await OrderModule.create({
-
-    })
+    console.log("order createion")
+    return res.status(201).json({success : true}) ;
   }
-  return;
+  return res.status(201).json({success : false}) ;
 });

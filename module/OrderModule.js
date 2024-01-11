@@ -13,7 +13,10 @@ const OrderSchema  = new mongoose.Schema({
     },
     TotalPrice  :  {
         value : Number,
-        currency : "USD"|"EUR"|"MAD"
+        currency : {
+            type : String ,
+            enum : ["USD", "EUR", "MAD"]
+        },
     },
     isDelaivered : {
         type : Boolean,
