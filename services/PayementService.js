@@ -5,6 +5,7 @@ const AddresseModule = require("../module/AddressModule");
 const stripe = require("stripe")(
   "sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3"
 );
+const UserModule = require('../module/UserModule');
 
 const OrderModule = require ('../module/OrderModule');
 
@@ -36,7 +37,8 @@ exports.CreateLineItems = asynchandler(async (req, res, next) => {
 });
 
 exports.CheckoutService = asynchandler(async (req, res, next) => {
-  console.log(req.body);
+
+
   const location = await AddresseModule.findOne({
     _id: req.body.address,
   });
@@ -53,7 +55,7 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
       customer_email: req.user.email,
       client_reference_id: req.body.cardId.toString(),
       metadata: {
-         address : location._id,
+         address : location._id.toString(),*
       },
       line_items: req.body.line_items,
     });
@@ -65,7 +67,7 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
 
 exports.webHookService = asynchandler(async (req, res, next) => {
 
-  
+
   const sig = req.headers["stripe-signature"];
   let event;
 
@@ -77,8 +79,14 @@ exports.webHookService = asynchandler(async (req, res, next) => {
   }
 
   if(event.type === "checkout.session.completed"){
-    console.log("order createion")
-    return res.status(201).json({success : true}) ;
+    const {client_reference_id ,  customer_email ,  metadata } = event.data.object;
+    const user  = await UserModule.findOne({email : customer_email});
+    const order = await OrderModule.findOne({
+      user : user._id,
+      address : metadata.address ,
+      card : client_reference_id,
+    });
+    return res.status(201).json({success : true});
   }
   return res.status(201).json({success : false}) ;
 });
