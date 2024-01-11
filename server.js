@@ -29,6 +29,9 @@ dotenv.config({ path: path.join(__dirname, "config.env")});
 
 ConnectDB()
 app.use(cors());
+app.options("*" ,cors());
+
+
 app.use(morgan("dev"))
 
 
