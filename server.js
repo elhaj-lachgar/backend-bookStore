@@ -16,7 +16,7 @@ const ConnectDB = require('./config/ConnetedDB');
 const AddressRoute = require('./api/AddressRoute');
 const PaymentRoute = require('./api/PayementRoute');
 const { webHookService } = require("./services/PayementService");
-const ParseRequiset = require("./middleware/ParseReq");
+
 
 
 
@@ -36,7 +36,7 @@ app.options("*" ,cors());
 app.use(morgan("dev"))
 
 
-app.post("/api/v1/webhook" ,express.raw({type : 'application/json'}), webHookService);
+app.post("/api/v1/webhook" ,express.raw({type : 'application/json'}), webHookService);o
 
 app.use(express.json())
 
