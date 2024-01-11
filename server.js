@@ -38,7 +38,7 @@ app.use(morgan("dev"))
 
 app.post("/api/v1/webhook" , ParseRequiset , webHookService);
 
-
+app.use(express.json())
 
 
 
