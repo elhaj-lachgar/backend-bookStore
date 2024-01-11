@@ -1,30 +1,50 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const OrderSchema  = new mongoose.Schema({
-    user : {
-        type : mongoose.Schema.ObjectId,
-        ref : "user",
-        required : [ true , "user is required"]
+const OrderSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "user",
+      required: [true, "user is required"],
     },
-    card : {
-        type : mongoose.Schema.ObjectId,
-        ref : "card",
-        required : [ true , "card is required"]
+    cardItems: [
+      {
+        book: {
+          type: mongoose.Schema.ObjectId,
+          ref: "book",
+        },
+        price: {
+          currency: {
+            type: String,
+            enum: ["USD", "EUR", "USD"],
+            default: "USD",
+          },
+          value: Number,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+      },
+    ],
+    isDelaivered: {
+      type: Boolean,
+      default: false,
     },
-    isDelaivered : {
-        type : Boolean,
-        default : false,
+    DelaiveredAt: Date,
+    address: {
+      type: mongoose.Schema.ObjectId,
+      ref: "address",
+      required: [true, "address is required"],
     },
-    DelaiveredAt : Date,
-    address : {
-        type : mongoose.Schema.ObjectId,
-        ref : "address",
-        required : [ true , "address is required"]
-    },
-},{timestamps:true});
+  },
+  { timestamps: true }
+);
 
+OrderSchema.post(["save", "init"], function (doc) {
+  doc.populate("address user card");
+});
 
-const OrderModule  = mongoose.model("order", OrderSchema);
-
+const OrderModule = mongoose.model("order", OrderSchema);
 
 module.exports = OrderModule;

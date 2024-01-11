@@ -16,7 +16,7 @@ const ConnectDB = require('./config/ConnetedDB');
 const AddressRoute = require('./api/AddressRoute');
 const PaymentRoute = require('./api/PayementRoute');
 const { webHookService } = require("./services/PayementService");
-
+const OrderRoute = require('./api/OrderRoute');
 
 
 
@@ -51,6 +51,7 @@ app.use('/api/v1/auth', AuthRoute);
 app.use("/api/v1/card", CardRoute);
 app.use("/api/v1/address",AddressRoute);
 app.use("/api/v1/payment", PaymentRoute);
+app.use("/api/v1/order", OrderRoute);
 
 
 app.all("*",(req, res , next ) => {

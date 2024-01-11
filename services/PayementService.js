@@ -81,10 +81,11 @@ exports.webHookService = asynchandler(async (req, res, next) => {
   if(event.type === "checkout.session.completed"){
     const {client_reference_id ,  customer_email ,  metadata } = event.data.object;
     const user  = await UserModule.findOne({email : customer_email});
+    const card = await CartModule.findOne({_id : client_reference_id});
     const order = await OrderModule.create({
       user : user._id,
       address : metadata.address ,
-      card : client_reference_id,
+      cardItems : card.Books,
     });
 
     return res.status(201).json({success : true});
