@@ -84,7 +84,6 @@ exports.AddElementToCardService = asynchandler(async (req, res, next) => {
       price: Book.price,
       quantity: req.body.quantity,
     });
-    console.log(Book.price.value * 1);
     card.TotalPrice += Book.price.value * (req.body.quantity || 1);
   } else {
     card.Books[index].quantity += 1;
@@ -124,10 +123,11 @@ exports.DeleteElmentFromCardService = asynchandler(async (req, res, next) => {
 // clear card
 // url api/v1/card
 exports.ClearCardService = asynchandler(async (req, res, next) => {
-  const card = await CartModule.findOne({ _id: req.user._id });
+  const card = await CartModule.findOne({ _id: req.params.id });
   if (!card) return next(new ErrorForm("Couldn't find card", 404));
-  await card.deleteOne();
-  return res.status(203).json({ message: "Card deleted successfully" });
+  card.Books.splice(0,card.Books.length);
+  await card.save();
+  return res.status(203).json({ message: "Card deleted successfully" ,success:true });
 });
 
 

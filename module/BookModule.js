@@ -26,7 +26,7 @@ const BookSchema = new mongoose.Schema(
     },
     count_rating: {
       type: Number,
-      default: 0,
+      default: 1,
     },
 
     reviews: [

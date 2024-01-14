@@ -20,7 +20,8 @@ const {
   Allowed,
   ChangePasswordOfUser,
   GetUsersService,
-  UpdateRoleOfUser
+  UpdateRoleOfUser,
+  LastVersionOfUser
 } = require("../services/AuthService");
 
 router.post("/sign-in", SignedInValidator, SignedInService);
@@ -52,6 +53,7 @@ router.put(
 )
 
 router.put('/role/:id',UpdateRoleOfUserValidator , UpdateRoleOfUser);
-router.get("/all-users/admin" , AuthService, Allowed("admin"),GetUsersService)
+router.get("/all-users/admin" , AuthService, Allowed("admin"),GetUsersService);
+router.get("/last-version",AuthService , Allowed("user"),LastVersionOfUser)
 
 module.exports = router;

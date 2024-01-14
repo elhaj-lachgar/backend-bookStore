@@ -5,7 +5,7 @@ const {
   GetOrdersService,
   DeleteOrderService,
   UpdateStatusOfDelaivered,
-  GetUserOrderService
+  GetUserOrderService,
 } = require("../services/OrderService");
 
 const {
@@ -14,21 +14,13 @@ const {
 } = require("../utils/validator/OrderValidator");
 const { Allowed, AuthService } = require("../services/AuthService");
 
-router.get("/all-users", GetOrdersService);
+router.get("/all-users", AuthService, Allowed("admin"), GetOrdersService);
 
 router
   .route("/:id")
-  .delete(
-    DeleteOrderValidator,
-    DeleteOrderService
-  )
-  .put(
-    UpdateStatusOfDelaiverdValidator,
-    UpdateStatusOfDelaivered
-  )
+  .delete(AuthService, Allowed("admin") , DeleteOrderValidator, DeleteOrderService)
+  .put(AuthService, Allowed("admin") , UpdateStatusOfDelaiverdValidator, UpdateStatusOfDelaivered);
 
-
-
-router.get("/" , AuthService , Allowed("user") , GetUserOrderService);
+router.get("/", AuthService, Allowed("user"), GetUserOrderService);
 
 module.exports = router;

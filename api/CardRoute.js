@@ -5,7 +5,8 @@ const {
   CreateCard,
   AddElementToCard,
   IncrementAndDecrementValidator,
-  DeleteElementFromCardValidator
+  DeleteElementFromCardValidator,
+  ClearCardValidator
 } = require("../utils/validator/CardValidator");
 const {
   CreateCardService,
@@ -49,5 +50,7 @@ router.put(
   DecrementQuantity
 );
 
+
+router.delete("/clear/:id" , AuthService, Allowed("user"),ClearCardValidator , ClearCardService )
 
 module.exports = router;

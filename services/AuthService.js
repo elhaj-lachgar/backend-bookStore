@@ -127,4 +127,11 @@ exports.UpdateRoleOfUser = asynchandler ( async ( req , res , next ) => {
   return res.status(202).json({data:user});
 })
 
+exports.LastVersionOfUser = asynchandler ( async (req , res , next ) => {
+    const user = await UserModule.findOne({_id : req.user._id});
+    const ResObj = user;
+    ResObj.password = undefined;
+    return res.status(200).json({data:user});
+})
+
 exports.GetUsersService = GetElements(UserModule);

@@ -23,14 +23,17 @@ exports.UpdateElement = (module) =>
 exports.GetElementById = (module, option) =>
   asynchandler(async (req, res, next) => {
     let doucement;
-    if (option == "book") {
-      doucement = await module
+    if (option=="book") {
+      const per_doucement = await module
         .findOne({ _id: req.params.id })
-        .populate("reviews.user");
+        .populate("reviews");
+      if(per_doucement.reviews?.length > 0 ) doucement = await  per_doucement.populate("reviews.user");
+      else doucement =  per_doucement;
     } else {
       doucement = await module.findOne({ _id: req.params.id });
     }
     if (!doucement) return next(new ErroFrom("doucement not found", 404));
+
     return res.status(200).json({ data: doucement });
   });
 

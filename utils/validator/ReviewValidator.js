@@ -15,6 +15,10 @@ exports.CreateReviewValidator = [
     .isNumeric()
     .withMessage("rating must be a number"),
 
+    check('content')
+    .notEmpty()
+    .withMessage("content is required"),
+
     ValidatorMiddleware
 ]
 

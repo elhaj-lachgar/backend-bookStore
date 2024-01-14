@@ -5,7 +5,8 @@ const BookModule = require("../module/BookModule");
 const UserModule = require("../module/UserModule");
 
 exports.CreateReviewService = asynchandler(async (req, res, next) => {
-  const valid = req.user.books?.includes(req.body.bookId);
+  const valid = req.user.ReviewBook?.includes(req.body.bookId);
+
   if (!valid)
     return next(
       new ErrorHandler("user has not access to create review in this book", 404)
@@ -27,9 +28,13 @@ exports.CreateReviewService = asynchandler(async (req, res, next) => {
   //handle book updates
   const book = await BookModule.findOne({ _id: req.body.bookId });
 
+
   book.reviews.push(review._id);
 
-  book.rating += req.body.rating / book.count_rating;
+  book.rating = Math.fround(
+    (book.rating * book.count_rating + req.body.rating) /
+      (book.count_rating + 1)
+  );
 
   book.count_rating += 1;
 
@@ -76,11 +81,12 @@ exports.DeleteReviewService = asynchandler(async (req, res, next) => {
   // update  book
   const book = await BookModule.findOne({ _id: review.book });
 
-  const i = book.reviews.findIndex( ele => ele.toString() == req.params.id );
+  const i = book.reviews.findIndex((ele) => ele.toString() == req.params.id);
 
-  book.reviews.splice(i,1);
+  book.reviews.splice(i, 1);
 
-  book.rating = book.count_rating * book.rating - review.rating;
+  book.rating =
+    (book.count_rating * book.rating - review.rating) / (book.count_rating - 1);
 
   book.count_rating -= 1;
 

@@ -73,3 +73,13 @@ exports.DeleteElementFromCardValidator = [
   .withMessage("id not valid"),
   ValidatorMiddleware
 ]
+
+
+exports.ClearCardValidator = [
+  check('id')
+  .notEmpty()
+  .withMessage('id is required')
+  .isMongoId()
+  .withMessage('id is not valid'),
+  ValidatorMiddleware
+]
