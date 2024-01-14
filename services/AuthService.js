@@ -121,4 +121,10 @@ exports.ChangePasswordOfUser = asynchandler ( async ( req , res , next ) => {
 }) 
 
 
+exports.UpdateRoleOfUser = asynchandler ( async ( req , res , next ) => {
+  const user = await UserModule.findOneAndUpdate({_id : req.params.id},{role : req.body.role},{new : true});
+  if(!user) return next( new ErrorHandler("user not found" , 404));
+  return res.status(202).json({data:user});
+})
+
 exports.GetUsersService = GetElements(UserModule);

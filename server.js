@@ -17,6 +17,7 @@ const AddressRoute = require('./api/AddressRoute');
 const PaymentRoute = require('./api/PayementRoute');
 const { webHookService } = require("./services/PayementService");
 const OrderRoute = require('./api/OrderRoute');
+const ReviewRoute = require('./api/ReviewRoute');
 
 
 
@@ -52,6 +53,7 @@ app.use("/api/v1/card", CardRoute);
 app.use("/api/v1/address",AddressRoute);
 app.use("/api/v1/payment", PaymentRoute);
 app.use("/api/v1/order", OrderRoute);
+app.use("/api/v1/review" ,ReviewRoute);
 
 
 app.all("*",(req, res , next ) => {

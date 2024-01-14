@@ -15,7 +15,7 @@ exports.CreateBookService = CreateElement(BookModule);
 
 exports.UpdateBookService = UpdateElement(BookModule);
 
-exports.GetBookService = GetElementById(BookModule);
+exports.GetBookService = GetElementById(BookModule , "book");
 
 exports.DeleteBookService = DeleteElement(BookModule);
 

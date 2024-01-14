@@ -91,3 +91,21 @@ exports.ChangePasswordValidator = [
 
     ValidatorMiddleware
 ]
+
+
+exports.UpdateRoleOfUserValidator = [
+    check('id')
+    .notEmpty()
+    .withMessage("id is required")
+    .isMongoId()
+    .withMessage("id not valid"),
+
+    check("role")
+    .notEmpty()
+    .withMessage("role is required")
+    .custom(value=>{
+        const v = ["user" , "admin"].includes(value);
+        if(!v) throw new Error("role not supported");
+        return true;
+    })
+]

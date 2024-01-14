@@ -5,7 +5,8 @@ const {
   SignedInValidator,
   SignedUpValidator,
   UpdateUserValidator,
-  ChangePasswordValidator
+  ChangePasswordValidator,
+  UpdateRoleOfUserValidator
 } = require("../utils/validator/AuthValidator");
 
 const { UploadeHandler, upload } = require("../utils/multer");
@@ -18,7 +19,8 @@ const {
   AuthService,
   Allowed,
   ChangePasswordOfUser,
-  GetUsersService
+  GetUsersService,
+  UpdateRoleOfUser
 } = require("../services/AuthService");
 
 router.post("/sign-in", SignedInValidator, SignedInService);
@@ -32,6 +34,8 @@ router.post(
 );
 router.put(
   "/update-user",
+  AuthService,
+  Allowed("user"),
   upload.single("image"),
   UploadeHandler("profile"),
   Clouding("profile"),
@@ -47,6 +51,7 @@ router.put(
   ChangePasswordOfUser
 )
 
+router.put('/role/:id',UpdateRoleOfUserValidator , UpdateRoleOfUser);
 router.get("/all-users/admin" , AuthService, Allowed("admin"),GetUsersService)
 
 module.exports = router;

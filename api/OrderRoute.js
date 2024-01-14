@@ -14,22 +14,19 @@ const {
 } = require("../utils/validator/OrderValidator");
 const { Allowed, AuthService } = require("../services/AuthService");
 
-router.get("/all-users", AuthService, Allowed("admin"), GetOrdersService);
+router.get("/all-users", GetOrdersService);
 
 router
   .route("/:id")
   .delete(
-    AuthService,
-    Allowed("admin"),
     DeleteOrderValidator,
     DeleteOrderService
   )
   .put(
-    AuthService,
-    Allowed("admin"),
     UpdateStatusOfDelaiverdValidator,
     UpdateStatusOfDelaivered
   )
+
 
 
 router.get("/" , AuthService , Allowed("user") , GetUserOrderService);

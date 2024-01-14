@@ -20,9 +20,16 @@ exports.UpdateElement = (module) =>
     return res.status(200).json({ data: doucement });
   });
 
-exports.GetElementById = (module) =>
+exports.GetElementById = (module, option) =>
   asynchandler(async (req, res, next) => {
-    const doucement = await module.findOne({ _id: req.params.id });
+    let doucement;
+    if (option == "book") {
+      doucement = await module
+        .findOne({ _id: req.params.id })
+        .populate("reviews.user");
+    } else {
+      doucement = await module.findOne({ _id: req.params.id });
+    }
     if (!doucement) return next(new ErroFrom("doucement not found", 404));
     return res.status(200).json({ data: doucement });
   });
@@ -35,19 +42,21 @@ exports.DeleteElement = (module) =>
     return res.status(200).json({ success: true });
   });
 
-exports.GetElements = (model) =>
+exports.GetElements = (model, option) =>
   asynchandler(async (req, res, next) => {
     const totaleDoucement = await model.countDocuments();
 
-    const { module , pagination } = new GetFeatures(model, req.query)
+    const { module, pagination } = new GetFeatures(model, req.query)
       .Filtre()
       .FieldsBy()
       .Pagination(totaleDoucement)
       .SortBy()
       .SearchBy();
 
-    const doucements =  await module
+    let doucements;
+    if (option == "order")
+      doucements = await module.populate("address cardItems.book");
+    else doucements = await module;
 
-    return res.status(200).json({ data :  doucements , pagination } );
-  
-});
+    return res.status(200).json({ data: doucements, pagination });
+  });

@@ -30,11 +30,11 @@ class GetFeatures {
     const limit = +this.limit || 5;
     const page = +this.page || 1;
     const skip = (page - 1) * limit;
-    const lastPage = Math.floor(totaleDoucement / limit);
+    const lastPage = Math.ceil(totaleDoucement / limit);
     const pagination = {};
     if (page < lastPage) pagination.nextPage = page + 1;
     if (page >= lastPage) pagination.perPage = page - 1;
-    pagination.countPage = lastPage;
+    pagination.countPage = lastPage ;
 
     this.module = this.module.find().skip(skip).limit(limit);
     pagination.currentPage = page;
@@ -45,8 +45,6 @@ class GetFeatures {
     if (this.sort) {
       const sortStr = this.sort.split(",").join(" ");
       this.module = this.module.sort(sortStr);
-    } else {
-      this.module = this.module.sort("-createdAt");
     }
 
     return this;
@@ -55,8 +53,6 @@ class GetFeatures {
     if (this.fields) {
       const fieldsStr = this.fields.split(",").join(" ");
       this.module = this.module.select(fieldsStr);
-    } else {
-      this.module = this.module.select("-createdAt");
     }
     return this;
   }

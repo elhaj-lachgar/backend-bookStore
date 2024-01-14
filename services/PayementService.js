@@ -3,7 +3,7 @@ const CartModule = require("../module/CartModule");
 const ErroFrom = require("../utils/ErrorForm");
 const AddresseModule = require("../module/AddressModule");
 const stripe = require("stripe")(
-  "sk_test_51O6sv8IinyIfdiTyHPMoHjr0KY2zMBDyO2MrOo9hRpA3bZjHQtZkgUjriez5HOpZ1NVq3gYO9mPHQZMSGrnJW9t500IHoLkkD3"
+  process.env.STRIPE
 );
 const UserModule = require('../module/UserModule');
 
@@ -48,10 +48,10 @@ exports.CheckoutService = asynchandler(async (req, res, next) => {
   let session;
   try {
     session = await stripe.checkout.sessions.create({
-      success_url: "http://localhost:3000/profile/myorder",
+      success_url: process.env.SUCESS_URL,
       mode: "payment",
       payment_method_types: ["card"],
-      cancel_url: "http://localhost:3000/",
+      cancel_url:process.env.CANCELE_URL,
       customer_email: req.user.email,
       client_reference_id: req.body.cardId.toString(),
       metadata: {
